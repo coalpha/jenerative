@@ -1,12 +1,14 @@
-start: halftone/Halftone.run
+start: sketches/halftone/Halftone.run
 
 clean:
 	# find . -name "*.class" -type f -delete
 
-%.run: %.class
+%.run: %.class always
 	java $*
 
-%.class: %.java
+%.class: %.java always
 	javac $<
 
-.PHONY: start clean
+always:
+
+.PHONY: start always

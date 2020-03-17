@@ -1,7 +1,0 @@
-{
-    "java.project.referencedLibraries": {
-        "include": [
-            "javafx-sdk-11.0.2/lib/*.jar",
-        ],
-    }
-}
