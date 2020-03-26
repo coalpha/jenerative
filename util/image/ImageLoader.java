@@ -7,9 +7,9 @@ import java.awt.image.BufferedImage;
 
 import util.config.IConfig;
 
-import opre.op.Option;
-import opre.re.Result;
-import static opre.re.Result.*;
+import opre.Option;
+import opre.Result;
+import static opre.Result.*;
 
 public class ImageLoader {
    private static final String lastImagePathKey = "ImageLoader.lastImagePath";
@@ -18,7 +18,7 @@ public class ImageLoader {
    public ImageLoader(IConfig<String, String> config) {
       this.config = (
          Option
-            .fromNullable(config)
+            .fromAny(config)
             .expect("ImageLoader.ImageLoader got a null config")
       );
    }

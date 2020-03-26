@@ -1,6 +1,6 @@
 package util.config;
 
-import opre.op.Option;
+import opre.Option;
 import java.io.PrintStream;
 
 public interface IConfig<K, V> extends util.IDisplay {
@@ -8,7 +8,9 @@ public interface IConfig<K, V> extends util.IDisplay {
    Option<V> get(K key);
    void set(K key, V val);
    void clear();
-   void printEntries(PrintStream out);
+   void displayEntries(PrintStream out);
+   /** Prints to System.out */
+   void displayEntries();
    /** Serialize the config file and write it to the disk */
    void save();
 }

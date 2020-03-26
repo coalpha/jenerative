@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 
 import java.io.File;
 
-import opre.op.Option;
+import opre.Option;
 
 @SuppressWarnings("serial")
 class ImageChooser extends FileDialog {
@@ -63,10 +63,10 @@ class ImageChooser extends FileDialog {
    }
 
    Option<String> getDirectoryString() {
-      return Option.fromNullable(super.getDirectory());
+      return Option.fromAny(super.getDirectory());
    }
 
    Option<String> getFilename() {
-      return Option.fromNullable(super.getFile());
+      return Option.fromAny(super.getFile());
    }
 }

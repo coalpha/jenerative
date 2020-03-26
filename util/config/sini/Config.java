@@ -5,15 +5,16 @@ import util.config.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.io.PrintStream;
 import java.util.List;
 import java.util.ArrayList;
 
 import java.nio.file.Files;
 import java.nio.charset.StandardCharsets;
 
-import opre.op.Option;
-import static opre.op.Option.*;
+import opre.Option;
+import static opre.Option.*;
+import static opre.Result.*;
 
 public class Config implements IConfig<String, String> {
    private static void IOException(IOException e, String what) {
@@ -92,16 +93,29 @@ public class Config implements IConfig<String, String> {
       }
    }
 
+   @Override
    public void clear() {
       entries.clear();
    }
 
    @Override
+   public void displayEntries(PrintStream out) {
+      out.print(this.display());
+   }
+
+   @Override
+   public void displayEntries() {
+      this.displayEntries(System.out);
+   }
+
+   @Override
    public String display() {
-      entries
-         .stream()
-         .map((entry) -> entry.display())
-         .forEach(System.out::println);
+      var sb = new StringBuilder();
+      for (var entry : this.entries) {
+         sb.append(entry.display());
+         sb.append('\n');
+      }
+      return sb.toString();
    }
 
    private String createConfigString() {
@@ -113,6 +127,8 @@ public class Config implements IConfig<String, String> {
       return sb.toString();
    }
 
+   // TODO
+   // Convert to Result::trycatch
    private boolean overwriteConfigFile(String outString) {
       try {
          var fw = new FileWriter(configFile.getAbsolutePath(), false);
@@ -124,7 +140,7 @@ public class Config implements IConfig<String, String> {
       }
    }
 
-   public void writeEntriesToFile() {
+   public void save() {
       var outString = createConfigString();
       var res = overwriteConfigFile(outString);
       if (res) {
