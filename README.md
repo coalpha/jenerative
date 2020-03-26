@@ -1,5 +1,7 @@
-# jenerative
+# sad-image-fun-time
 
-Wow! That was a waste of my time!
+*Wow. I sure love OOP!*
+
+
 
 ![Pointless!](./out.png)

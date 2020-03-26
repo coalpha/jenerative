@@ -1,4 +1,6 @@
-package config;
+package util.config.ini;
+
+import util.config.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -10,10 +12,7 @@ import java.util.ArrayList;
 import java.nio.file.Files;
 import java.nio.charset.StandardCharsets;
 
-public class Config {
-   private final File configFile;
-   private final List<Entry> entries = new ArrayList<>(1);
-
+public class Config implements IConfig<String, String> {
    private static void IOException(IOException e, String what) {
       e.printStackTrace();
       System.err.println(e);
@@ -21,9 +20,11 @@ public class Config {
       System.exit(1);
    }
 
-   /**
-    * Creates the config file if it does not exist
-    */
+
+   private final File configFile;
+   private final List<Entry> entries = new ArrayList<>(1);
+
+   /** Creates the config file if it does not exist */
    private void createConfigFile() {
       try {
          configFile.createNewFile();
@@ -64,9 +65,10 @@ public class Config {
     * Naive getter
     * O(n ^ 2)
     */
-   public Entry getEntry(String key) {
+   @Override
+   public IEntry<String, String> getEntry(String key) {
       for (var entry : entries) {
-         if (entry.key.equals(key)) {
+         if (entry.getKey().equals(key)) {
             return entry;
          }
       }
@@ -78,7 +80,7 @@ public class Config {
       if (entry == null) {
          return null;
       } else {
-         return entry.val;
+         return entry.getVal();
       }
    }
 
@@ -87,7 +89,7 @@ public class Config {
       if (entry == null) {
          entries.add(new Entry(key, val));
       } else {
-         entry.val = val;
+         entry.setVal(val);
       }
    }
 
@@ -95,7 +97,8 @@ public class Config {
       entries.clear();
    }
 
-   public void printEntries() {
+   @Override
+   public String display() {
       entries
          .stream()
          .map((entry) -> entry.display())
