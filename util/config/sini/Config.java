@@ -1,4 +1,4 @@
-package util.config.ini;
+package util.config.sini;
 
 import util.config.*;
 
@@ -11,6 +11,9 @@ import java.util.ArrayList;
 
 import java.nio.file.Files;
 import java.nio.charset.StandardCharsets;
+
+import opre.op.Option;
+import static opre.op.Option.*;
 
 public class Config implements IConfig<String, String> {
    private static void IOException(IOException e, String what) {
@@ -66,30 +69,26 @@ public class Config implements IConfig<String, String> {
     * O(n ^ 2)
     */
    @Override
-   public IEntry<String, String> getEntry(String key) {
+   public Option<IEntry<String, String>> getEntry(String key) {
       for (var entry : entries) {
          if (entry.getKey().equals(key)) {
-            return entry;
+            return Some(entry);
          }
       }
-      return null;
+      return None();
    }
 
-   public String get(String key) {
-      var entry = getEntry(key);
-      if (entry == null) {
-         return null;
-      } else {
-         return entry.getVal();
-      }
+   @Override
+   public Option<String> get(String key) {
+      return this.getEntry(key).map(IEntry::getVal);
    }
 
    public void set(String key, String val) {
-      var entry = getEntry(key);
-      if (entry == null) {
+      var entry = this.getEntry(key);
+      if (entry.is_none()) {
          entries.add(new Entry(key, val));
       } else {
-         entry.setVal(val);
+         entry.unwrap().setVal(val);
       }
    }
 

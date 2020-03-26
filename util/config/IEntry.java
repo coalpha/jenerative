@@ -1,4 +1,5 @@
 package util.config;
+
 import util.*;
 
 public interface IEntry<K,V> extends IDisplay, IStringSerialize {

@@ -1,4 +1,5 @@
-package util.config.ini;
+package util.config.sini;
+
 import util.config.IEntry;
 
 public class Entry implements IEntry<String, String> {
@@ -30,6 +31,11 @@ public class Entry implements IEntry<String, String> {
    @Override
    public String getVal() {
       return this.val;
+   }
+
+   @Override
+   public void setVal(String val) {
+      this.val = val;
    }
 
    @Override

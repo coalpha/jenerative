@@ -10,5 +10,5 @@ public interface IConfig<K, V> extends util.IDisplay {
    void clear();
    void printEntries(PrintStream out);
    /** Serialize the config file and write it to the disk */
-void save();
+   void save();
 }

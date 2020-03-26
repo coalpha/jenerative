@@ -3,15 +3,12 @@ package util.image;
 import java.io.File;
 import javax.imageio.ImageIO;
 
-import java.awt.Frame;
-import java.awt.FileDialog;
 import java.awt.image.BufferedImage;
 
 import util.config.IConfig;
 
 import opre.op.Option;
 import opre.re.Result;
-import static opre.op.Option.*;
 import static opre.re.Result.*;
 
 public class ImageLoader {
@@ -27,43 +24,57 @@ public class ImageLoader {
    }
 
    public BufferedImage load() {
-      File image = getImageFile();
-      if (image != null && image.exists()) {
-         return loadImageFromFile(image);
+      File image = this.getImageFile();
+      if (image.exists()) {
+         return (
+            this.loadImageFromFile(image)
+               .expect("Unable to load image from selected file")
+         );
       }
-      throw new RuntimeException("Unable to get image file!");
+      // somehow the image file was deleted
+      // during the time we selected it
+      throw new RuntimeException("Panic at ImageLoader#load: Not possible??");
    }
 
-   private Option<File> getLastImage() {
-      return config.get(lastImagePathKey).map(path -> new File(path));
+   private File getImageFile() {
+      var lastImage = this.getLastImageChoice();
+      var lastImageIsGood = lastImage.map(File::exists).unwrap_or(false);
+
+      if (lastImageIsGood) {
+         return lastImage.unwrap();
+      } else {
+         return this.choseImageAndSaveChoice();
+      }
    }
-   
-   private void setLastImage(File image) {
-      config.set(lastImagePathKey, image.getAbsolutePath());
-      config.save();
+
+   private Option<File> getLastImageChoice() {
+      return this.config.get(lastImagePathKey).map(path -> new File(path));
    }
 
    /**
     * <b>Side Effect!</b>
     * Calls this#setLastImage.
     */
-   private File chooseImage() {
+   private File choseImageAndSaveChoice() {
       var newImage = new ImageChooser().actuallyGetFile();
       this.setLastImage(newImage);
       return newImage;
    }
 
-   private File getImageFile() {
-      var lastImage = getLastImage();
-      var lastImageIsGood = lastImage.map(File::exists).unwrap_or(false);
-      if (lastImageIsGood) {
-         return lastImage.unwrap();
-      } else {
-         return this.chooseImage();
-      }
+   private void setLastImage(File image) {
+      this.config.set(lastImagePathKey, image.getAbsolutePath());
+      this.config.save();
    }
 
+   /**
+    * TODO
+    * Don't use the try catch block
+    */
    private Result<BufferedImage, String> loadImageFromFile(File file) {
-      return trycatch(() -> { return ImageIO.read(file); });
+      try {
+         return Ok(ImageIO.read(file));
+      } catch (Throwable e) {
+         return Err(e.toString());
+      }
    }
 }
