@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 
 import opre.Option;
 import static opre.Option.*;
-import static opre.Result.*;
 
 public class Config implements IConfig<String, String> {
    private static void IOException(IOException e, String what) {
@@ -140,6 +139,7 @@ public class Config implements IConfig<String, String> {
       }
    }
 
+   @Override
    public void save() {
       var outString = createConfigString();
       var res = overwriteConfigFile(outString);

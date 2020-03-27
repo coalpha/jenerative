@@ -1,13 +1,15 @@
+classpath:=".;lib/*"
+
 start: sketches/halftone/Halftone.run
 
 clean:
 	# find . -name "*.class" -type f -delete
 
 %.run: %.class always
-	java $*
+	java -cp $(classpath) $*
 
 %.class: %.java always
-	javac $<
+	javac -cp $(classpath) $<
 
 always:
 

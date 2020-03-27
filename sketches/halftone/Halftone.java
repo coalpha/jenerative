@@ -1,6 +1,6 @@
 package sketches.halftone;
 
-import config.Config;
+import util.config.sini.Config;
 import util.ui.CanvasHolder;
 import util.image.ImageLoader;
 
