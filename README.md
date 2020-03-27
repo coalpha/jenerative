@@ -1,7 +1,5 @@
-# sad-image-fun-time
+# jmage-processing
 
-*Wow. I sure love OOP!*
-
-
+*Java image processing using AWT. No Swing!*
 
 ![Pointless!](./out.png)

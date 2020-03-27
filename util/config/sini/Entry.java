@@ -2,7 +2,7 @@ package util.config.sini;
 
 import util.config.IEntry;
 
-public class Entry implements IEntry<String, String> {
+class Entry implements IEntry<String, String> {
    public static Entry fromString(String s) {
       var equalsIndex = s.indexOf('=');
       if (equalsIndex == -1) {

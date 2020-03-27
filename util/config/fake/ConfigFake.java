@@ -6,7 +6,7 @@ import java.io.PrintStream;
 
 import opre.Option;
 
-public class Config<K, V> implements IConfig<K, V> {
+public class ConfigFake<K, V> implements IConfig<K, V> {
    @Override
    public Option<V> get(K key) {
       return Option.None();

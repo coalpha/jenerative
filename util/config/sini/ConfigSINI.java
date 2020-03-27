@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 import opre.Option;
 import static opre.Option.*;
 
-public class Config implements IConfig<String, String> {
+public class ConfigSINI implements IConfig<String, String> {
    private static void IOException(IOException e, String what) {
       e.printStackTrace();
       System.err.println(e);
@@ -32,7 +32,7 @@ public class Config implements IConfig<String, String> {
       try {
          configFile.createNewFile();
       } catch (IOException e) {
-         Config.IOException(e, "create");
+         ConfigSINI.IOException(e, "create");
       }
    }
 
@@ -43,7 +43,7 @@ public class Config implements IConfig<String, String> {
             StandardCharsets.UTF_8
          );
       } catch (IOException e) {
-         Config.IOException(e, "read");
+         ConfigSINI.IOException(e, "read");
       }
       return null;
    }
@@ -52,7 +52,7 @@ public class Config implements IConfig<String, String> {
     * Includes a bug where if there's a duplicate key,
     * it still adds it to the list
     */
-   public Config(String filePath) {
+   public ConfigSINI(String filePath) {
       configFile = new File(filePath);
 
       createConfigFile();
