@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import util.TriConsumer;
 
-class ColorMatrix {
+class ColorMatrix implements util.IDisplay {
    public int width;
    public int height;
    public Color[][] data;
@@ -12,10 +12,11 @@ class ColorMatrix {
    public ColorMatrix(BufferedImage img) {
       this(img.getWidth(), img.getHeight());
       for (var y = 0; y < this.height; y++) {
-         var row = new Color[this.width];
+         var row = this.data[y];
          for (var x = 0; x < this.width; x++) {
-            row[x] = new Color(img.getRGB(x, y));
-            System.out.printf("data[%d][%d] = %b\n", y, x, row[x] == null);
+            var rgb = img.getRGB(x, y);
+            var temp = new Color(rgb);
+            row[x] = temp;
          }
       }
    }
@@ -27,11 +28,23 @@ class ColorMatrix {
    }
 
    public void forEach(TriConsumer<Color, Integer, Integer> fn) {
+      System.out.println(this.display());
       for (var y = 0; y < this.height; y++) {
          var row = this.data[y];
          for (var x = 0; x < this.width; x++) {
             fn.accept(row[x], x, y);
          }
       }
+   }
+
+   @Override
+   public String display() {
+      var sb = new StringBuilder("ColorMatrix {");
+      sb.append("\n   width: ");
+      sb.append(this.width);
+      sb.append(",\n   height: ");
+      sb.append(this.height);
+      sb.append(",\n}");
+      return sb.toString();
    }
 }

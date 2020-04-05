@@ -2,6 +2,8 @@ classpath:=".;lib/*"
 
 start: sketches/halftone/Halftone.run
 
+build: sketches/halftone/Halftone.class
+
 clean:
 	# find . -name "*.class" -type f -delete
 

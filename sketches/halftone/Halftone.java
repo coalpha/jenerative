@@ -7,9 +7,11 @@ import util.ui.CanvasHolder;
 import util.image.ImageLoader;
 
 import java.awt.Color;
-import java.lang.Runnable;
+import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
+
+import opre.Panic;
 
 import java.io.File;
 
@@ -20,79 +22,57 @@ public class Halftone {
       final var img = il.load();
       final var iw = img.getWidth();
       final var ih = img.getHeight();
-      final var window = new CanvasHolder("Pendejo");
+      final var window = new CanvasHolder("Halftone");
       final var canvas = new HalftoneCanvas();
       window.add(canvas, 0);
       window.setSize(iw, ih);
-      // canvas.setSize(img.getWidth(), img.getHeight());
-      // window.pack();
+      canvas.setSize(img.getWidth(), img.getHeight());
+      window.pack();
       window.setResizable(false);
       window.setVisible(true);
       canvas.getGraphics().drawImage(img, 0, 0, null);
       var m = new ColorMatrix(img);
 
-      var drawThread = new Thread(() -> {
-         m.forEach((color, x, y) -> {
-            var ctx = canvas.getGraphics();
-            ctx.drawImage(img, 0, 0, null);
-            ctx.dispose();
-            var img_ctx = img.getGraphics();
-            System.out.println("img_ctx" + img_ctx);
-            img_ctx.setColor(color.darker());
-            img_ctx.fillRect(x, y, 1, 1);
-            try {
-               Thread.sleep(10);
-            } catch (Throwable e) {}
-         });
-      });
-      // Thread drawThread = new Thread(new Runnable() {
-      //    final int SSSA = 40;
-      //    final int xstep = img.getWidth() / SSSA;
-      //    final int ystep = img.getHeight() / SSSA;
-      //    int x = 0;
-      //    int y = 0;
-      //    private void nap(int n) {
-      //       try {
-      //          Thread.sleep(n);
-      //       } catch (Throwable e) {
-      //          System.err.println("bruh");
-      //       }
-      //    }
-      //    @Override
-      //    public void run() {
-      //       while (true) {
-      //          var ctx = canvas.getGraphics();
-      //          ctx.drawImage(img, 0, 0, null);
-      //          ctx.dispose();
-      //          var img_ctx = img.getGraphics();
-      //          int cx;
-      //          int cy;
-      //          if (y < SSSA) {
-      //             if (x < SSSA) {
-      //                x++;
-      //             } else {
-      //                x = 0;
-      //                y++;
-      //             }
-      //             cx = x * xstep;
-      //             cy = y * ystep;
-      //             img_ctx.setColor(pixels[cx + xstep][cy + ystep]);
-      //             img_ctx.fillRect(cx, cy, xstep, ystep);
-      //             img_ctx.setColor(pixels[cx][cy]);
-      //             img_ctx.fillOval(cx, cy, xstep, ystep);
-      //             img_ctx.dispose();
-      //             nap(0);
-      //          } else {
-      //             try {
-      //                ImageIO.write(img, "png", new File("out.png"));
-      //             } catch (Throwable e) {
+      Thread drawThread = new Thread(new Runnable() {
+         final int SSSA = 40;
+         final int xstep = img.getWidth() / SSSA;
+         final int ystep = img.getHeight() / SSSA;
+         int x = 0;
+         int y = 0;
+         @Override
+         public void run() {
+            while (true) {
+               var ctx = canvas.getGraphics();
+               ctx.drawImage(img, 0, 0, null);
+               ctx.dispose();
+               var img_ctx = img.getGraphics();
+               int cx;
+               int cy;
+               if (y < SSSA) {
+                  if (x < SSSA) {
+                     x++;
+                  } else {
+                     x = 0;
+                     y++;
+                  }
+                  cx = x * xstep;
+                  cy = y * ystep;
+                  img_ctx.setColor(m.data[cx + xstep][cy + ystep]);
+                  img_ctx.fillRect(cx, cy, xstep, ystep);
+                  img_ctx.setColor(m.data[cx][cy]);
+                  img_ctx.fillOval(cx, cy, xstep, ystep);
+                  img_ctx.dispose();
+               } else {
+                  try {
+                     ImageIO.write(img, "png", new File("sketches/halftone/out.png"));
+                  } catch (Throwable e) {
                      
-      //             }
-      //             System.exit(0);
-      //          }
-      //       }
-      //    }
-      // });
+                  }
+                  System.exit(0);
+               }
+            }
+         }
+      });
       drawThread.run();
       canvas.setIgnoreRepaint(true);
    }
