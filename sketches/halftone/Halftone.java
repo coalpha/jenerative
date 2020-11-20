@@ -1,7 +1,6 @@
 package sketches.halftone;
 
 import util.config.IConfig;
-import util.config.sini.ConfigSINI;
 import util.config.fake.ConfigFake;
 import util.ui.CanvasHolder;
 import util.image.ImageLoader;
@@ -23,7 +22,7 @@ public class Halftone {
       final var iw = img.getWidth();
       final var ih = img.getHeight();
       final var window = new CanvasHolder("Halftone");
-      final var canvas = new HalftoneCanvas();
+      final var canvas = new HalftoneCanvas(0, 0);
       window.add(canvas, 0);
       window.setSize(iw, ih);
       canvas.setSize(img.getWidth(), img.getHeight());
